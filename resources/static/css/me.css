@@ -51,6 +51,11 @@ body {
     padding-bottom: 5em !important;
 }
 
+.m-padded-lr-small-responsive {
+    padding-left: 2em !important;
+    padding-right: 2em !important;
+}
+
 .m-padded-lr-responsive {
     padding-left: 4em !important;
     padding-right: 4em !important;
@@ -133,6 +138,13 @@ body {
     margin: auto !important;
 }
 
+/*shadow*/
+
+.m-shadow-small {
+    -webkit-box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+}
+
 /*color*/
 .m-black {
     color: #333 !important;
@@ -150,6 +162,10 @@ body {
         display: block !important;
     }
     .m-padded-lr-responsive {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    .m-mobile-lr-clear {
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
