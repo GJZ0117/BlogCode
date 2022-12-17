@@ -1,0 +1,29 @@
+spring:
+
+  # 数据库
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/blog?useSSL=false&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: gjz191900
+
+  # jpa
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+
+# 日志
+logging:
+  level:
+    root: info
+    com.gjz: debug
+  file:
+    name: log/blog-pro.log
+  logback:
+    rollingpolicy:
+      max-file-size: 4MB
+      file-name-pattern: log/blog-pro.%d{yyyy-MM-dd}.%i.log
+      max-history: 30
+
+
