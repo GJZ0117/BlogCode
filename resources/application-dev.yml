@@ -5,13 +5,13 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/blog?useSSL=false&useUnicode=true&characterEncoding=utf-8
     username: root
-    password: gjz19190
+    password: gjz191900
 
   # jpa
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    show-sql: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
 # 日志
 logging:
