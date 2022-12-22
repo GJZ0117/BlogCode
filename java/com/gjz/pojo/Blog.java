@@ -42,4 +42,7 @@ public class Blog {
 
     @OneToMany(mappedBy = "blog")
     private List<Comment> comments = new ArrayList<>();
+
+    @Transient
+    private String tagIds;
 }

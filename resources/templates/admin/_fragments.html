@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
           data-filtered="filtered">
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+    <link rel="stylesheet" href="../static/lib/editorMd/css/editormd.min.css" th:href="@{/lib/editorMd/css/editormd.min.css}">
 </head>
 <body>
 
@@ -81,6 +82,8 @@
     <th:block th:fragment="script">
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+        <script src="../static/lib/editorMd/editormd.min.js" th:src="@{/lib/editorMd/editormd.min.js}"></script>
+
     </th:block>
 </body>
 </html>
