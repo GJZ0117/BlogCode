@@ -2,9 +2,14 @@ package com.gjz.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.gjz.pojo.Tag;
+import com.gjz.pojo.Type;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 //mybatis
 //@Mapper
@@ -20,4 +25,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TagDao extends JpaRepository<Tag, Long> {
     Tag findByName(String name);
+
+    @Query("select t from Tag t")
+    List<Tag> findTop(Pageable pageable);
 }
