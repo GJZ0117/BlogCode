@@ -5,6 +5,7 @@ import com.gjz.exception.NotFoundException;
 import com.gjz.pojo.Blog;
 import com.gjz.pojo.Type;
 import com.gjz.service.BlogService;
+import com.gjz.util.MarkdownUtils;
 import com.gjz.util.MyBeanUtils;
 import com.gjz.vo.BlogQuery;
 import org.springframework.beans.BeanUtils;
@@ -36,6 +37,22 @@ public class BlogServiceImpl implements BlogService {
         return blogDao.findById(id).orElse(null);
     }
 
+    @Transactional
+    @Override
+    public Blog getAndConvert(Long id) {
+        Blog blog = blogDao.findById(id).orElse(null);
+        if (blog == null) {
+            throw new NotFoundException("博客不存在");
+        }
+        Blog b = new Blog();
+        BeanUtils.copyProperties(blog, b);
+        String content = b.getContent();
+        b.setContent(MarkdownUtils.markdownToHtmlExtensions(content));
+
+        blogDao.updateViews(id);
+        return b;
+    }
+
     @Override
     public Page<Blog> listBlog(Pageable pageable, BlogQuery blog) {
         return blogDao.findAll(new Specification<Blog>() {
@@ -60,6 +77,11 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public Page<Blog> listBlog(Pageable pageable) {
         return blogDao.findAll(pageable);
+    }
+
+    @Override
+    public Page<Blog> listBlog(String query, Pageable pageable) {
+        return blogDao.findByQuery(query, pageable);
     }
 
     @Override

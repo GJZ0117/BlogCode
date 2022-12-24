@@ -4,3 +4,7 @@ spring:
     # 指定使用哪个配置文件(后缀)
   profiles:
     active: dev
+
+
+comment:
+  avatar: /images/avatar.png

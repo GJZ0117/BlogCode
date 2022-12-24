@@ -2,6 +2,7 @@ package com.gjz.pojo;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -31,4 +32,6 @@ public class Comment {
 
     @ManyToOne
     private Comment parentComment;
+
+    private boolean adminComment;
 }

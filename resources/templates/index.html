@@ -23,7 +23,7 @@
                 <div class="right m-item item m-mobile-hide">
                     <div class="ui icon transparent inverted input">
                         <input type="text" placeholder="Search...">
-                        <i class="search icon link"></i>
+                        <i class="search link icon"></i>
                     </div>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                         <div class="ui padded vertical segment m-padded-tb-large m-padded-lr-small-responsive m-mobile-lr-clear" th:each="blog : ${page.content}">
                             <div class="ui middle aligned mobile reversed stackable grid">
                                 <div class="eleven wide column">
-                                    <div class="ui header"><a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="m-black" th:text="${blog.title}"></a>文章1</div>
+                                    <div class="ui header"><a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="m-black" th:text="${blog.title}">文章1</a></div>
                                     <p class="m-text" th:text="|${blog.description}......|">(段落内容)为了得到无限整数序列中的第 nn 位数字，需要知道第 nn 位数字是哪一个整数的第几位。如果知道第 nn
                                         位数字所在整数是几位数，就能计算得到第 nn 位数字是哪一个整数的第几位</p>
                                     <div class="ui stackable grid">
@@ -100,7 +100,7 @@
                                 <a href="#" th:href="@{/(page=${page.number}-1)}" th:unless="${page.first}" class="ui mini teal basic button">上一页</a>
                             </div>
                             <div class="right aligned column">
-                                <a href="#" th:href="@{/(page=${page.number}+1)}" th:unless="${page.first}" class="ui mini teal basic button">下一页</a>
+                                <a href="#" th:href="@{/(page=${page.number}+1)}" th:unless="${page.last}" class="ui mini teal basic button">下一页</a>
                             </div>
                         </div>
                     </div>
