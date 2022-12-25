@@ -39,6 +39,11 @@ public class CommentServiceImpl implements CommentService {
         return commentDao.save(comment);
     }
 
+    @Override
+    public void flushCommentsByBlogId(Long blogId) {
+        commentDao.flushCommentsByBlogId(blogId);
+    }
+
     private List<Comment> eachComment(List<Comment> comments) {
         List<Comment> commentsView = new ArrayList<>();
         for (Comment comment : comments) {

@@ -42,7 +42,7 @@ public class MarkdownUtils {
         @Override
         public void setAttributes(Node node, String tagName, Map<String, String> attributes) {
             if (node instanceof Link) {
-                attributes.put("target", "_blank");
+//                attributes.put("target", "_blank");
             }
             if (node instanceof TableBlock) {
                 attributes.put("class", "ui celled table");

@@ -1,4 +1,4 @@
-package com.gjz.controller;
+package com.gjz.controller.admin;
 
 import com.gjz.pojo.Blog;
 import com.gjz.pojo.User;
@@ -98,6 +98,8 @@ public class BlogController {
 
     @GetMapping("/blogs/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes attributes) {
+        blogService.deleteBlogTags(id);
+        blogService.deleteBlogComments(id);
         blogService.deleteBlog(id);
         attributes.addFlashAttribute("message", "删除成功");
         return REDIRECT_LIST;

@@ -5,6 +5,7 @@ import com.gjz.exception.NotFoundException;
 import com.gjz.pojo.Blog;
 import com.gjz.pojo.Type;
 import com.gjz.service.BlogService;
+import com.gjz.service.CommentService;
 import com.gjz.util.MarkdownUtils;
 import com.gjz.util.MyBeanUtils;
 import com.gjz.vo.BlogQuery;
@@ -18,16 +19,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import javax.persistence.criteria.*;
+import java.util.*;
 
 @Service
 public class BlogServiceImpl implements BlogService {
+
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     private BlogDao blogDao;
@@ -80,6 +79,17 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public Page<Blog> listBlog(Long tagId, Pageable pageable) {
+        return blogDao.findAll(new Specification<Blog>() {
+            @Override
+            public Predicate toPredicate(Root<Blog> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                Join join = root.join("tags");
+                return criteriaBuilder.equal(join.get("id"), tagId);
+            }
+        }, pageable);
+    }
+
+    @Override
     public Page<Blog> listBlog(String query, Pageable pageable) {
         return blogDao.findByQuery(query, pageable);
     }
@@ -89,6 +99,21 @@ public class BlogServiceImpl implements BlogService {
         Sort sort = Sort.by(Sort.Direction.DESC, "updateTime");
         Pageable pageable = PageRequest.of(0, size, sort);
         return blogDao.findTop(pageable);
+    }
+
+    @Override
+    public Map<String, List<Blog>> archiveBlog() {
+        Map<String, List<Blog>> map = new TreeMap<>();
+        List<String> years = blogDao.findGroupYear();
+        for (String year : years) {
+            map.put(year, blogDao.findByYear(year));
+        }
+        return map;
+    }
+
+    @Override
+    public Long countBlog() {
+        return blogDao.count();
     }
 
     @Transactional
@@ -114,6 +139,17 @@ public class BlogServiceImpl implements BlogService {
         BeanUtils.copyProperties(blog, b, MyBeanUtils.getNullPropertyNames(blog));
         b.setUpdateTime(new Date());
         return blogDao.save(b);
+    }
+
+    @Override
+    public void deleteBlogTags(Long blogId) {
+        blogDao.deleteBlogTags(blogId);
+    }
+
+    @Override
+    public void deleteBlogComments(Long blogId) {
+        commentService.flushCommentsByBlogId(blogId);
+        blogDao.deleteBlogComments(blogId);
     }
 
     @Transactional

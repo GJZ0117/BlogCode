@@ -44,10 +44,28 @@ public class IndexController {
         return "search";
     }
 
+    @GetMapping("/search/{query}")
+    public String searchPage(@PageableDefault(size = 3, sort = ("updateTime"), direction = Sort.Direction.DESC) Pageable pageable, @PathVariable String query, Model model) {
+        model.addAttribute("page" , blogService.listBlog("%" + query + "%",pageable));
+        model.addAttribute("query", query);
+        return "search";
+    }
+
     @GetMapping("/blog/{id}")
     public String blog(@PathVariable Long id, Model model) {
         model.addAttribute("blog", blogService.getAndConvert(id));
         return "blog";
+    }
+
+    @GetMapping("/footer/newblog")
+    public String newBlogs(Model model) {
+        model.addAttribute("newblog", blogService.listRecommendBlogTop(3));
+        return "_fragments :: newBlogList";
+    }
+
+    @GetMapping("/about")
+    public String about() {
+        return "about";
     }
 
 }

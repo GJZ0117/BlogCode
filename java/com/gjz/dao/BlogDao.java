@@ -23,4 +23,20 @@ public interface BlogDao extends JpaRepository<Blog, Long>, JpaSpecificationExec
     @Modifying
     @Query("update Blog b set b.views = b.views+1 where b.id=?1")
     int updateViews(Long id);
+
+    @Query("select function('date_format', b.createTime, '%Y') as year from Blog b group by function('date_format', b.createTime, '%Y') order by function('date_format', b.createTime, '%Y') desc")
+    List<String> findGroupYear();
+
+    @Query("select b from Blog b where function('date_format', b.createTime, '%Y') = ?1")
+    List<Blog> findByYear(String year);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from t_blog_tags where blogs_id=?1", nativeQuery = true)
+    void deleteBlogTags(Long blogId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from t_comment where blog_id=?1", nativeQuery = true)
+    void deleteBlogComments(Long blogId);
 }
