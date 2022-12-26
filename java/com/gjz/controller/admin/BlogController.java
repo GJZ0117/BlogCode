@@ -1,12 +1,15 @@
 package com.gjz.controller.admin;
 
 import com.gjz.pojo.Blog;
+import com.gjz.pojo.Comment;
 import com.gjz.pojo.User;
 import com.gjz.service.BlogService;
+import com.gjz.service.CommentService;
 import com.gjz.service.TagService;
 import com.gjz.service.TypeService;
 import com.gjz.vo.BlogQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -33,10 +36,16 @@ public class BlogController {
     private BlogService blogService;
 
     @Autowired
+    private CommentService commentService;
+
+    @Autowired
     private TypeService typeService;
 
     @Autowired
     private TagService tagService;
+
+    @Value("${comment.avatar}")
+    private String avatar;
 
     @GetMapping("/blogs")
     public String list(@PageableDefault(size = 3, sort = ("updateTime"), direction = Sort.Direction.DESC) Pageable pageable, BlogQuery blog, Model model) {
@@ -87,9 +96,9 @@ public class BlogController {
         }
 
         if (b == null) {
-            attributes.addFlashAttribute("message", "新增失败");
+            attributes.addFlashAttribute("message", "操作失败");
         } else {
-            attributes.addFlashAttribute("message", "新增成功");
+            attributes.addFlashAttribute("message", "操作成功");
         }
 
         return REDIRECT_LIST;
@@ -103,5 +112,22 @@ public class BlogController {
         blogService.deleteBlog(id);
         attributes.addFlashAttribute("message", "删除成功");
         return REDIRECT_LIST;
+    }
+
+
+    @GetMapping("/comment/{blogId}")
+    public String comments(@PathVariable Long blogId, Model model) {
+        model.addAttribute("blogId", blogId);
+        model.addAttribute("comments", commentService.listCommentByBlogId(blogId));
+        return "admin/comment";
+    }
+
+
+    @GetMapping("/deleteComment/{blogId}/{commentId}")
+    public String deleteComment(@PathVariable Long blogId, @PathVariable Long commentId, Model model) {
+        commentService.deleteComments(commentId);
+        model.addAttribute("blogId", blogId);
+        model.addAttribute("comments", commentService.listCommentByBlogId(blogId));
+        return "admin/comment";
     }
 }

@@ -1,8 +1,6 @@
 package com.gjz.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.gjz.pojo.Type;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

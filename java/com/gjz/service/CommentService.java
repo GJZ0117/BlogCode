@@ -12,4 +12,6 @@ public interface CommentService {
 
     void flushCommentsByBlogId(Long blogId);
 
+    void deleteComments(Long commentId);
+
 }

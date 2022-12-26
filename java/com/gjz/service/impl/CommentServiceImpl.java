@@ -9,9 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -44,11 +42,30 @@ public class CommentServiceImpl implements CommentService {
         commentDao.flushCommentsByBlogId(blogId);
     }
 
+    @Override
+    public void deleteComments(Long commentId) {
+        List<Long> deleteCommentId = new ArrayList<>();
+        Queue<Long> queue = new LinkedList<>();
+        deleteCommentId.add(commentId);
+        queue.add(commentId);
+        while (!queue.isEmpty()) {
+            Long parentCommentId = queue.poll();
+            List<Comment> childrenComments = commentDao.findCommentsByParentComment(parentCommentId);
+            for (Comment c : childrenComments) {
+                deleteCommentId.add(c.getId());
+                queue.add(c.getId());
+            }
+        }
+        Long[] ids = deleteCommentId.toArray(new Long[deleteCommentId.size()]);
+        commentDao.flushParentCommentByCommentId(ids);
+        commentDao.deleteCommentsById(ids);
+    }
+
     private List<Comment> eachComment(List<Comment> comments) {
         List<Comment> commentsView = new ArrayList<>();
         for (Comment comment : comments) {
             Comment c = new Comment();
-            BeanUtils.copyProperties(comment,c);
+            BeanUtils.copyProperties(comment, c);
             commentsView.add(c);
         }
         combineChildren(commentsView);
@@ -59,7 +76,7 @@ public class CommentServiceImpl implements CommentService {
 
         for (Comment comment : comments) {
             List<Comment> replys1 = comment.getReplyComment();
-            for(Comment reply1 : replys1) {
+            for (Comment reply1 : replys1) {
                 recursively(reply1);
             }
             comment.setReplyComment(tempReplys);
@@ -68,13 +85,14 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private List<Comment> tempReplys = new ArrayList<>();
+
     private void recursively(Comment comment) {
         tempReplys.add(comment);
-        if (comment.getReplyComment().size()>0) {
+        if (comment.getReplyComment().size() > 0) {
             List<Comment> replys = comment.getReplyComment();
             for (Comment reply : replys) {
                 tempReplys.add(reply);
-                if (reply.getReplyComment().size()>0) {
+                if (reply.getReplyComment().size() > 0) {
                     recursively(reply);
                 }
             }
